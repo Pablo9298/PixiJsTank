@@ -7,8 +7,8 @@ export const assetsMap = {
 
         { name: "HeavyTowerB", url: "./assets/parts/towers/HeavyTowerB.png" },
 
-        { name: "TrackCFrame1", url: "./assets/parts/tracks/TrackСFrame1.png" },
-        { name: "TrackCFrame2", url: "./assets/parts/tracks/TrackСFrame2.png" },
+        { name: "TrackCFrame1", url: "./assets/parts/tracks/TrackCFrame1.png" },
+        { name: "TrackCFrame2", url: "./assets/parts/tracks/TrackCFrame2.png" },
 
         { name: "MediumShell", url: "./assets/parts/bullets/MediumShell.png" },
     ]
