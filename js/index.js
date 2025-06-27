@@ -1,6 +1,7 @@
-import {Application, Graphics} from "./pixi.mjs";
+import {Application, Graphics, Rectangle} from "./pixi.mjs";
 import { assetsMap } from "./assetsMap.js";
 import { Tank } from "./Tank.js";
+import { Tween, TweenManager } from "./Tween.js";
 
 // Create the application
 const app = new Application({
@@ -23,6 +24,44 @@ const runGame = () => {
     app.stage.position.set(800 / 2, 800 / 2);
 
     window["TANK"] = tank;
+
+    const tweenManager = new TweenManager(app.ticker);
+
+    const moveTank = ({data}) => {
+        const distanceToCenter = data.getLocalPosition(app.stage);
+        const distanceToTank = data.getLocalPosition(tank.view);
+        const angle = Math.atan2(distanceToTank.y, distanceToTank.x);
+
+        let callAmount = 2;
+        const move = () => {
+            callAmount -= 1;
+            if(callAmount <= 0) {
+                tweenManager.createTween(tank, 3000, {x: distanceToCenter.x, y: distanceToCenter.y }, {
+                    onStart: () => tank.startTrack(),
+                    onFinish: () => tank.stopTrack()
+                });
+            }
+        }
+
+        tweenManager.createTween(tank, 1000, { towerDirection: angle }, {
+            onFinish: () => move()
+        });
+
+        tweenManager.createTween(tank, 2000, { bodyDirection: angle }, {
+            onStart: () => {
+                tank.startTrack();
+            },
+            onFinish: () => {
+                tank.stopTrack();
+                move();
+            }
+        })
+    }
+
+    app.stage.on("pointerdown", moveTank, undefined);
+    app.stage.interactive = true;
+    app.stage.interactiveChildren = false;
+    app.stage.hitArea = new Rectangle(-400, -400, 800, 800);
 
 };
 
